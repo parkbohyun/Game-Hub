@@ -1,0 +1,494 @@
+:root {
+  --bg-color: #f0f4f8;
+  --primary-color: #4a90e2;
+  --primary-dark: #357abd;
+  --dark-text: #2c3e50;
+  --border-color: #d1d9e6;
+  --thick-border: 3px solid #2c3e50;
+  --cell-size: 45px;
+  --card-bg: #ffffff;
+  --card-shadow: rgba(0, 0, 0, 0.05);
+  --cell-bg: #fff;
+  --cell-fixed-bg: #f1f3f5;
+  --cell-fixed-text: #adb5bd;
+  --cell-selected-bg: #e3f2fd;
+  --cell-highlight-line: #e8f4fc;
+  --cell-highlight-same: #fff3cd;
+  --same-number-border: #ffc107;
+  --numpad-bg: white;
+  --numpad-border: #dee2e6;
+  --numpad-shadow: #e0e6ed;
+  --numpad-special-bg: #f1f3f5;
+  --status-inactive: #7f8c8d;
+}
+
+[data-theme="dark"] {
+  --bg-color: #1a1a2e;
+  --dark-text: #eaeaea;
+  --border-color: #3a3a5a;
+  --thick-border: 3px solid #6a6a8a;
+  --card-bg: #16213e;
+  --card-shadow: rgba(0, 0, 0, 0.3);
+  --cell-bg: #1e2746;
+  --cell-fixed-bg: #252a40;
+  --cell-fixed-text: #6a6a8a;
+  --cell-selected-bg: #2a3a5a;
+  --cell-highlight-line: #232d45;
+  --cell-highlight-same: #3d3a20;
+  --same-number-border: #b8860b;
+  --numpad-bg: #16213e;
+  --numpad-border: #3a3a5a;
+  --numpad-shadow: #0a0a1e;
+  --numpad-special-bg: #252a40;
+  --status-inactive: #6a6a8a;
+}
+
+body {
+  font-family: 'Pretendard', sans-serif;
+  background: var(--bg-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 10px;
+  touch-action: manipulation;
+  color: var(--dark-text);
+  transition: background 0.3s, color 0.3s;
+}
+
+.topbar {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--card-bg);
+  box-shadow: 0 5px 15px var(--card-shadow);
+  color: var(--dark-text);
+  font-weight: 700;
+}
+
+.smallbtn {
+  text-decoration: none;
+  background: #4A90E2;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.smallbtn.secondary {
+  background: var(--numpad-special-bg);
+  color: var(--dark-text);
+}
+
+#game-container {
+  display: block;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px var(--card-shadow);
+  flex-wrap: wrap;
+}
+
+#difficulty {
+  padding: 12px 15px;
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--dark-text);
+  outline: none;
+  transition: all 0.2s ease;
+  background-color: var(--numpad-special-bg);
+}
+
+#difficulty:focus {
+  border-color: var(--primary-color);
+  background-color: var(--card-bg);
+  box-shadow: 0 0 8px rgba(74, 144, 226, 0.2);
+}
+
+button#start-btn {
+  padding: 12px 25px;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary-color);
+  color: white;
+  font-weight: 800;
+  font-size: 1rem;
+  box-shadow: 0 4px 0 var(--primary-dark);
+  transition: 0.1s;
+}
+
+button#start-btn:active {
+  transform: translateY(3px);
+  box-shadow: none;
+}
+
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 10px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--status-inactive);
+}
+
+.status-bar.active {
+  color: var(--dark-text);
+}
+
+#sudoku-grid {
+  display: grid;
+  grid-template-columns: repeat(9, var(--cell-size));
+  grid-template-rows: repeat(9, var(--cell-size));
+  border: var(--thick-border);
+  margin: 0 auto;
+  background: var(--card-bg);
+  width: fit-content;
+  user-select: none;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px var(--card-shadow);
+}
+
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  border: 0.5px solid var(--border-color);
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: var(--cell-bg);
+  color: var(--dark-text);
+}
+
+.cell:nth-child(3n) {
+  border-right: var(--thick-border);
+}
+
+.cell:nth-child(9n) {
+  border-right: 0.5px solid var(--border-color);
+}
+
+.cell:nth-child(n+19):nth-child(-n+27),
+.cell:nth-child(n+46):nth-child(-n+54) {
+  border-bottom: var(--thick-border);
+}
+
+.cell.selected {
+  background-color: var(--cell-selected-bg);
+  box-shadow: inset 0 0 0 2px var(--primary-color);
+  z-index: 5;
+}
+
+.cell.fixed {
+  background: var(--cell-fixed-bg);
+  color: var(--cell-fixed-text);
+  cursor: default;
+}
+
+/* 같은 행/열/박스 하이라이트 */
+.cell.highlight-line {
+  background-color: var(--cell-highlight-line);
+}
+
+/* 동일 숫자 하이라이트 */
+.cell.highlight-same {
+  background-color: var(--cell-highlight-same);
+  box-shadow: inset 0 0 0 2px var(--same-number-border);
+}
+
+/* 선택된 셀은 다른 하이라이트보다 우선 */
+.cell.selected.highlight-line,
+.cell.selected.highlight-same {
+  background-color: var(--cell-selected-bg);
+  box-shadow: inset 0 0 0 2px var(--primary-color);
+}
+
+.val-span.input-correct {
+  color: #2d89ef !important;
+}
+
+.val-span.input-wrong {
+  color: #ff4d4f !important;
+}
+
+.num-pad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+  opacity: 0.2;
+  pointer-events: none;
+  transition: 0.3s;
+}
+
+.num-pad.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.num-btn {
+  padding: 16px 0;
+  background: var(--numpad-bg);
+  color: var(--dark-text) !important;
+  border: 1px solid var(--numpad-border);
+  border-radius: 12px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--numpad-shadow);
+}
+
+.num-btn:active {
+  transform: translateY(2px);
+  box-shadow: none;
+  background: var(--numpad-special-bg);
+}
+
+.num-btn.special {
+  background: var(--numpad-special-bg);
+  font-size: 0.9rem;
+  color: var(--status-inactive) !important;
+}
+
+.num-btn.memo-active {
+  background: #2c3e50 !important;
+  color: white !important;
+  box-shadow: 0 3px 0 #1a252f;
+}
+
+.memo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  pointer-events: none;
+}
+
+.memo-num {
+  font-size: 0.65rem;
+  color: var(--cell-fixed-text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 키보드 힌트 */
+.keyboard-hint {
+  margin-top: 15px;
+  padding: 12px 16px;
+  background: var(--card-bg);
+  border: 1px dashed var(--border-color);
+  border-radius: 10px;
+  font-size: 0.85rem;
+  color: var(--status-inactive);
+  text-align: center;
+}
+
+.keyboard-hint strong {
+  color: var(--dark-text);
+}
+
+/* 커스텀 팝업 모달 */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.popup-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.popup-modal {
+  background: var(--card-bg);
+  border-radius: 18px;
+  padding: 30px 25px;
+  max-width: 340px;
+  width: 90%;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  transform: scale(0.9);
+  transition: transform 0.25s ease;
+}
+
+.popup-overlay.show .popup-modal {
+  transform: scale(1);
+}
+
+.popup-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.popup-title {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--dark-text);
+  margin-bottom: 12px;
+}
+
+.popup-message {
+  font-size: 1rem;
+  color: var(--dark-text);
+  line-height: 1.6;
+  margin-bottom: 8px;
+  white-space: pre-line;
+}
+
+.popup-score-box {
+  background: var(--numpad-special-bg);
+  border-radius: 12px;
+  padding: 15px;
+  margin: 15px 0;
+}
+
+.popup-score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-weight: 600;
+}
+
+.popup-score-row .label {
+  color: var(--status-inactive);
+  font-size: 0.95rem;
+}
+
+.popup-score-row .value {
+  color: var(--dark-text);
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.popup-score-row .value.highlight {
+  color: var(--primary-color);
+}
+
+.popup-score-row .value.new-record {
+  color: #27ae60;
+}
+
+.popup-btn {
+  padding: 14px 30px;
+  border: none;
+  border-radius: 12px;
+  background: var(--primary-color);
+  color: white;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 var(--primary-dark);
+  transition: 0.1s;
+  margin-top: 10px;
+}
+
+.popup-btn:active {
+  transform: translateY(3px);
+  box-shadow: none;
+}
+
+.popup-btn.secondary {
+  background: var(--numpad-special-bg);
+  color: var(--dark-text);
+  box-shadow: 0 4px 0 var(--numpad-shadow);
+}
+
+.popup-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.popup-sub {
+  font-size: 0.85rem;
+  color: var(--status-inactive);
+  margin-top: 12px;
+}
+
+@media (max-width: 500px) {
+  :root {
+    --cell-size: 10.5vw;
+  }
+
+  .controls {
+    gap: 8px;
+    padding: 15px;
+  }
+
+  #user-id {
+    width: 90px;
+  }
+}
+
+/* ===== num-pad: 남은 개수 표시 ===== */
+.num-btn[data-num] {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  line-height: 1;
+}
+
+.num-btn[data-num] .num-main {
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+
+.num-btn[data-num] .num-sub {
+  font-size: 0.75rem;
+  font-weight: 800;
+  opacity: 0.6;
+}
+
+/* 남은 개수 0이면 "사라지게" (레이아웃 유지하며 안 보이게) */
+.num-btn.done {
+  visibility: hidden;
+  pointer-events: none;
+}

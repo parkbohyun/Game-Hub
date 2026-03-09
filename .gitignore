@@ -1,0 +1,9 @@
+# Environment Variables
+.env
+.env.local
+
+# Generated files
+assets/js/config.js
+
+# Node modules (if any get added)
+node_modules/

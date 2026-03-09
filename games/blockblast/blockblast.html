@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <link rel="stylesheet" href="blockblast.css">
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=cover" />
+  <title>Block Blast V1.0</title>
+
+  <!-- Firebase (Compat) -->
+  <script src="/assets/js/config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="../common/game-common.js"></script>
+  <script src="blockblast.js" defer></script>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="header">
+      <a class="home-btn" href="../../index.html">🏠 Home</a>
+      <div class="badge" id="user-badge">세션 준비 중...</div>
+      <div class="scorebox">
+        <span class="label">SCORE</span>
+        <span class="val" id="score">0</span>
+      </div>
+    </div>
+
+    <div class="panel board-area">
+      <div class="toolbar">
+        <div class="subinfo" id="subinfo">
+          블럭을 드래그 또는 선택 후 보드에 놓으세요. 가로/세로가 꽉 차면 삭제됩니다.<br/>
+          보드가 완전히 비면 <b>Perfect Bonus</b>가 추가됩니다.
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn" id="btn-new">새 게임</button>
+          <button class="btn danger" id="btn-clear">초기화</button>
+        </div>
+      </div>
+
+      <div class="board" id="board" aria-label="Block Blast Board"></div>
+
+      <div class="tray" id="tray" aria-label="Pieces Tray"></div>
+
+      <div class="leaderboard">
+        <div class="lb-title">
+          <span>리더보드 TOP 10</span>
+          <span style="font-size:12px; font-weight:900; opacity:0.85;" id="lb-status">불러오는 중...</span>
+        </div>
+        <div class="lb-list" id="lb-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="modal-backdrop" id="modal">
+    <div class="modal">
+      <h2 id="modal-title">게임 종료</h2>
+      <p id="modal-body">점수: 0</p>
+      <p id="modal-body2"></p>
+      <div class="actions">
+        <button class="btn" id="btn-restart">다시하기</button>
+        <a class="btn" id="btn-home" href="../../index.html">홈으로</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

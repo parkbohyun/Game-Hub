@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <link rel="stylesheet" href="minesweeper.css">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Minesweeper Pro</title>
+
+  <script src="/assets/js/config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="../common/game-common.js"></script>
+  <script src="minesweeper.js" defer></script>
+</head>
+
+<body>
+
+  <div class="header">
+    <div class="nav-btns">
+      <a href="../../index.html" class="home-btn">🏠 Home</a>
+      <select id="difficulty" class="difficulty-select" onchange="resetGame()">
+        <option value="easy">쉬움</option>
+        <option value="normal">보통</option>
+        <option value="hard">어려움</option>
+      </select>
+    </div>
+    <div id="user-badge">준비 중...</div>
+  </div>
+
+  <div class="status-bar">
+    <div class="stat">
+      <span class="stat-label">TIME</span>
+      <span id="timer" class="stat-value">0</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">MINES</span>
+      <span id="mine-count" class="stat-value">0</span>
+    </div>
+  </div>
+
+  <div id="grid" class="grid-container"></div>
+
+  <div class="controls-info">
+    🖱️ 좌클릭: 열기 / 우클릭: 깃발 / 휠클릭: 주변 열기<br>
+    📱 모바일: 터치로 열기 / 길게 눌러서 깃발
+  </div>
+
+  <!-- 커스텀 팝업 모달 -->
+  <div class="popup-overlay" id="popup-overlay">
+    <div class="popup-modal">
+      <div class="popup-icon" id="popup-icon">🎉</div>
+      <div class="popup-title" id="popup-title">알림</div>
+      <div class="popup-message" id="popup-message"></div>
+      <div class="popup-score-box" id="popup-score-box" style="display: none;">
+        <div class="popup-score-row">
+          <span class="label">걸린 시간</span>
+          <span class="value" id="popup-time-value">0초</span>
+        </div>
+        <div class="popup-score-row" id="popup-prev-score" style="display: none;">
+          <span class="label">이전 점수</span>
+          <span class="value" id="popup-prev-value">0점</span>
+        </div>
+        <div class="popup-score-row" id="popup-curr-score" style="display: none;">
+          <span class="label">현재 점수</span>
+          <span class="value highlight" id="popup-curr-value">0점</span>
+        </div>
+      </div>
+      <div class="popup-sub" id="popup-sub"></div>
+      <div class="popup-buttons">
+        <button class="popup-btn secondary" id="popup-btn-secondary" onclick="closePopupSecondary()">🔄 다시하기</button>
+        <button class="popup-btn" id="popup-btn" onclick="closePopup()">🏠 홈으로</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

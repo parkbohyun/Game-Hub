@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <link rel="stylesheet" href="apple.css">
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>사과게임 (Fruit Box) V1.1</title>
+
+    <script src="/assets/js/config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="../common/game-common.js"></script>
+    <script src="apple.js" defer></script>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="topbar">
+            <div class="top-info">
+                <div class="title">🍎 사과게임 <small>Fruit Box</small></div>
+                <div class="badge" id="user-badge">세션 준비 중...</div>
+            </div>
+            <div class="top-info">
+                <div class="stats-row">
+                    <div class="chip">⏱ <b id="time">120</b></div>
+                    <div class="chip">🏁 <b id="score">0</b></div>
+                    <div class="chip">⭐ <b id="best">-</b></div>
+                </div>
+                <div class="btn-group">
+                    <a class="btn btn-sub" href="../../index.html">🏠 Home</a>
+                    <button class="btn btn-sub" id="btn-leaderboard">🏆 리더보드</button>
+                    <button class="btn btn-sub" id="btn-restart">🔄 새게임</button>
+                    <button class="btn btn-primary" id="btn-end">✅ 종료/저장</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="board-card">
+            <div class="board-head">
+                <div class="hint">드래그하여 합이 10이 되는<br>직사각형 영역을 만드세요!</div>
+                <div class="sum-indicator" id="sum-indicator">Σ <span id="sum">0</span></div>
+            </div>
+            <div class="board-container">
+                <div class="board" id="board"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay">
+        <div class="modal">
+            <h3 id="modal-title">게임 종료</h3>
+            <p id="modal-desc"></p>
+            <div class="lb" id="lb"></div>
+            <div style="display:flex; gap:8px; justify-content: center;">
+                <button class="btn btn-sub" onclick="hideOverlay()">닫기</button>
+                <button class="btn btn-primary" id="btn-save">기록 저장</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

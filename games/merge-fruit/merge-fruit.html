@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <link rel="stylesheet" href="merge-fruit.css">
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <title>Merge Fruit Online</title>
+
+    <!-- Firebase compat -->
+    <script src="/assets/js/config.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="../common/game-common.js"></script>
+    <script src="merge-fruit.js" defer></script>
+</head>
+
+<body>
+    <!-- 커스텀 팝업 오버레이 -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-modal">
+            <div class="popup-icon" id="popupIcon">🎉</div>
+            <div class="popup-title" id="popupTitle">게임 오버</div>
+            <div class="popup-message" id="popupMessage"></div>
+            <div class="popup-score-box" id="popupScoreBox"></div>
+            <div class="popup-sub" id="popupSub"></div>
+            <div class="popup-buttons" id="popupButtons"></div>
+        </div>
+    </div>
+
+    <div class="topbar">
+        <a href="../../index.html" class="smallbtn">🏠 홈</a>
+        <div class="badge" id="user-badge">세션 준비 중...</div>
+    </div>
+
+    <div class="header">
+        <h1 class="title">MERGE FRUIT</h1>
+
+        <div class="hud">
+            <div class="card">
+                <span class="label">SCORE</span>
+                <span class="value" id="scoreEl">0</span>
+            </div>
+            <div class="card">
+                <span class="label">NEXT</span>
+                <span class="value" id="nextEl">🍒</span>
+            </div>
+
+            <div class="actions">
+                <button class="btn" id="btnSfx">효과음: ON</button>
+                <button class="btn" id="btnVibe">진동: ON</button>
+                <button class="btn primary" id="btnPause">일시정지</button>
+                <button class="btn" id="btnRestart">재시작</button>
+                <!-- <button class="btn danger" id="btnHome">HOME</button> -->
+            </div>
+        </div>
+
+        <p class="hint">마우스/터치로 X 위치를 정하고 클릭(탭)하면 과일이 떨어집니다. 같은 과일끼리 합체됩니다.</p>
+    </div>
+
+    <div id="gameWrap">
+        <div id="gameContainer">
+            <canvas id="cv"></canvas>
+
+            <div class="overlay" id="overlay">
+                <div class="modal">
+                    <h2 id="overTitle">GAME OVER</h2>
+                    <p id="overScore">Score: 0</p>
+                    <div style="display:flex; gap:8px; justify-content:center; margin-top:12px; flex-wrap:wrap;">
+                        <button class="btn primary" id="btnAgain">재시작</button>
+                        <button class="btn" id="btnSave">점수 저장</button>
+                    </div>
+                    <div class="sub" id="overSub">
+                        회원 로그인 시 리더보드에 저장됩니다. (게스트는 저장 불가)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="leaderboard">
+        <h3>LEADERBOARD (TOP 10)</h3>
+        <div id="scoreList" class="muted">불러오는 중...</div>
+    </div>
+</body>
+
+</html>

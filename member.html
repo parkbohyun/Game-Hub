@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GAME HUB - Login</title>
+
+  <link rel="stylesheet" as="style" crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+  <link rel="stylesheet" href="assets/css/auth.css" />
+
+  <script src="assets/js/theme.js"></script>
+  <script src="/assets/js/config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+  <script src="assets/js/firebase.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/member.js" defer></script>
+</head>
+
+<body>
+  <div id="loader-overlay" class="loader-overlay">
+    <div class="spinner"></div>
+  </div>
+  <main class="auth-container">
+    <div class="card" id="auth-section">
+      <header class="auth-header">
+        <h1 class="brand-title">GAME HUB</h1>
+        <p class="muted">
+          회원가입 없이도 게임은 가능합니다.<br />
+          단, <strong>리더보드 점수 기록</strong>은 회원만 가능합니다.
+        </p>
+      </header>
+
+      <section class="guest-section">
+        <button class="btn-primary-gradient" onclick="enterAsGuest()">게스트로 시작</button>
+        <p class="small">게스트는 점수 저장이 제한됩니다.</p>
+      </section>
+
+      <div class="divider-with-text"><span>또는</span></div>
+
+      <nav class="auth-tabs">
+        <button id="tab-login" class="auth-tab active" onclick="switchAuthTab('login')">로그인</button>
+        <button id="tab-signup" class="auth-tab" onclick="switchAuthTab('signup')">회원가입</button>
+      </nav>
+
+      <article id="panel-login" class="auth-panel active">
+        <div class="input-group">
+          <input type="email" id="login-email" placeholder="이메일" autocomplete="email"
+            onkeypress="if(event.key==='Enter') signIn()" />
+          <input type="password" id="login-password" placeholder="비밀번호" autocomplete="current-password"
+            onkeypress="if(event.key==='Enter') signIn()" />
+        </div>
+
+        <div class="button-row">
+          <button class="btn-main" onclick="signIn()">로그인</button>
+          <button class="btn-sub" onclick="sendResetEmail()">비밀번호 찾기</button>
+        </div>
+      </article>
+
+      <article id="panel-signup" class="auth-panel">
+        <div class="input-group">
+          <input type="text" id="signup-name" placeholder="표시 이름 (최대 20자)" maxlength="20"
+            onkeypress="if(event.key==='Enter') signUp()" />
+          <input type="email" id="signup-email" placeholder="이메일" autocomplete="email"
+            onkeypress="if(event.key==='Enter') signUp()" />
+          <input type="password" id="signup-password" placeholder="비밀번호 (6자 이상)" autocomplete="new-password"
+            onkeypress="if(event.key==='Enter') signUp()" />
+          <input type="password" id="signup-password-confirm" placeholder="비밀번호 확인" autocomplete="new-password"
+            onkeypress="if(event.key==='Enter') signUp()" />
+        </div>
+
+        <div class="button-row">
+          <button class="btn-main" onclick="signUp()">회원가입 완료</button>
+        </div>
+      </article>
+
+      <p class="msg" id="auth-msg"></p>
+    </div>
+  </main>
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <link rel="stylesheet" href="maze-eater.css">
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Retro Maze Eater Online</title>
+
+  <script src="/assets/js/config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="../common/game-common.js"></script>
+  <script src="maze-eater.js" defer></script>
+</head>
+
+<body>
+
+  <div class="topbar">
+    <a href="../../index.html" class="smallbtn">🏠 홈</a>
+    <div class="badge" id="user-badge">세션 준비 중...</div>
+  </div>
+
+  <div class="header">
+    <h1 style="margin:0; color: #f1c40f;">MAZE EATER</h1>
+    <div class="score-board">SCORE: <span id="currentScore">0</span></div>
+  </div>
+
+  <div id="game-container">
+    <canvas id="pacmanCanvas"></canvas>
+  </div>
+
+  <div class="controls">
+    <div class="btn" style="grid-area: up" onclick="handleControl('up')">▲</div>
+    <div class="btn" style="grid-area: left" onclick="handleControl('left')">◀</div>
+    <div class="btn" style="grid-area: right" onclick="handleControl('right')">▶</div>
+    <div class="btn" style="grid-area: down" onclick="handleControl('down')">▼</div>
+  </div>
+
+  <p class="instructions">방향키(↑↓←→) 또는 화면 버튼으로 조작하세요!</p>
+
+  <!-- 리더보드 DOM (기존 코드엔 없어서 에러났음) -->
+  <div id="leaderboard">
+    <h3>LEADERBOARD (TOP 10)</h3>
+    <div id="scoreList" class="muted">불러오는 중...</div>
+  </div>
+
+  <!-- 게임오버 모달 -->
+  <div class="modal-overlay" id="gameOverModal">
+    <div class="modal-box">
+      <h2 class="modal-title" id="modalTitle">GAME OVER</h2>
+      <p class="modal-score" id="modalScore">Your Score: 0</p>
+      <div class="modal-buttons">
+        <button class="modal-btn primary" onclick="restartGame()">재시작</button>
+        <button class="modal-btn secondary" onclick="goHome()">홈</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

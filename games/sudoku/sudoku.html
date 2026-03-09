@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <link rel="stylesheet" href="sudoku.css">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>수도쿠 V4.0</title>
+
+  <script src="/assets/js/config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="../common/game-common.js"></script>
+  <script src="sudoku.js" defer></script>
+</head>
+
+<body>
+
+  <div class="topbar">
+    <a href="../../index.html" class="smallbtn">🏠 홈</a>
+    <div class="badge" id="user-badge">세션 준비 중...</div>
+    <button class="smallbtn secondary" onclick="goLogin()">로그인/회원가입</button>
+  </div>
+
+  <div id="game-container">
+    <h1 style="font-weight: 900; letter-spacing: -1px; margin-bottom: 20px;">Sudoku Master</h1>
+
+    <div class="controls">
+      <select id="difficulty">
+        <option value="35">쉬움</option>
+        <option value="50" selected>보통</option>
+        <option value="65">어려움</option>
+      </select>
+      <button id="start-btn" onclick="startGame()">🚀 게임 시작!</button>
+    </div>
+
+    <div class="status-bar" id="status-bar">
+      <div id="timer">시간: 00:00</div>
+      <div id="mistake-display" style="color: #ff4d4f;">실수: 0</div>
+    </div>
+
+    <div id="sudoku-grid">
+      <div style="grid-column: span 9; padding: 60px 20px; background: #fff; color: #adb5bd; font-weight: 600;">
+        위의 정보를 입력하고 시작하세요!
+      </div>
+    </div>
+
+    <div class="num-pad" id="num-pad">
+      <button class="num-btn" data-num="1" onclick="handleInput(1)">
+        <span class="num-main">1</span><span class="num-sub">9</span>
+      </button>
+      <button class="num-btn" data-num="2" onclick="handleInput(2)">
+        <span class="num-main">2</span><span class="num-sub">9</span>
+      </button>
+      <button class="num-btn" data-num="3" onclick="handleInput(3)">
+        <span class="num-main">3</span><span class="num-sub">9</span>
+      </button>
+      <button class="num-btn" data-num="4" onclick="handleInput(4)">
+        <span class="num-main">4</span><span class="num-sub">9</span>
+      </button>
+      <button class="num-btn" data-num="5" onclick="handleInput(5)">
+        <span class="num-main">5</span><span class="num-sub">9</span>
+      </button>
+      <button class="num-btn" data-num="6" onclick="handleInput(6)">
+        <span class="num-main">6</span><span class="num-sub">9</span>
+      </button>
+      <button class="num-btn" data-num="7" onclick="handleInput(7)">
+        <span class="num-main">7</span><span class="num-sub">9</span>
+      </button>
+      <button class="num-btn" data-num="8" onclick="handleInput(8)">
+        <span class="num-main">8</span><span class="num-sub">9</span>
+      </button>
+      <button class="num-btn" data-num="9" onclick="handleInput(9)">
+        <span class="num-main">9</span><span class="num-sub">9</span>
+      </button>
+    
+      <button class="num-btn special" id="memo-toggle" onclick="toggleMemo()">메모 OFF</button>
+      <button class="num-btn special" style="grid-column: span 5; margin-top: 5px;" onclick="handleInput(0)">
+        지우개 (선택 칸 삭제)
+      </button>
+    </div>
+
+    <div class="keyboard-hint" id="keyboard-hint">
+      💡 <strong>키보드 지원:</strong> 숫자키(1-9), 방향키(↑↓←→), Delete/Backspace(지우기), M(메모 토글)<br>
+      📊 <strong>점수 계산:</strong> (1000 - 시간(초) - 실수×10) × 난이도배율 | 쉬움 ×1 | 보통 ×1.5 | 어려움 ×2
+    </div>
+  </div>
+
+  <!-- 커스텀 팝업 모달 -->
+  <div class="popup-overlay" id="popup-overlay">
+    <div class="popup-modal">
+      <div class="popup-icon" id="popup-icon">🎉</div>
+      <div class="popup-title" id="popup-title">알림</div>
+      <div class="popup-message" id="popup-message"></div>
+      <div class="popup-score-box" id="popup-score-box" style="display: none;">
+        <div class="popup-score-row" id="popup-prev-score" style="display: none;">
+          <span class="label">이전 점수</span>
+          <span class="value" id="popup-prev-value">0점</span>
+        </div>
+        <div class="popup-score-row" id="popup-curr-score" style="display: none;">
+          <span class="label">현재 점수</span>
+          <span class="value highlight" id="popup-curr-value">0점</span>
+        </div>
+      </div>
+      <div class="popup-sub" id="popup-sub"></div>
+      <div class="popup-buttons">
+        <button class="popup-btn secondary" id="popup-btn-secondary" onclick="closePopupSecondary()"
+          style="display: none;">다시하기</button>
+        <button class="popup-btn" id="popup-btn" onclick="closePopup()">확인</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

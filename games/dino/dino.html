@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <link rel="stylesheet" href="dino.css">
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DINO RUN V1.0</title>
+
+    <!-- Firebase compat -->
+    <script src="/assets/js/config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="../common/game-common.js"></script>
+    <script src="dino.js" defer></script>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="topbar">
+            <div class="leftGroup">
+                <a href="../../index.html" class="home-btn">🦖 Home</a>
+                <div class="badge" id="user-badge">세션 준비 중...</div>
+            </div>
+            <div class="scores">
+                <div class="scoreBox">
+                    <span class="scoreLabel">HI</span>
+                    <span class="scoreVal" id="best">00000</span>
+                </div>
+                <div class="scoreBox">
+                    <span class="scoreLabel">SCORE</span>
+                    <span class="scoreVal" id="score">00000</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel gamePanel">
+            <div class="canvasFrame" id="canvasFrame">
+                <canvas id="game"></canvas>
+                <div class="hudOverlay" id="hudOverlay">
+                    <div class="overlayCard" id="overlayCard">
+                        <p class="overlayTitle" id="overlayTitle">DINO RUN</p>
+                        <p class="overlayDesc" id="overlayDesc">
+                            SPACE / ↑ / TAP = 점프<br />
+                            ↓ = 숙이기<br /><br />
+                            SPACE 또는 화면 터치로 시작
+                        </p>
+                        <div class="controlsRow" style="pointer-events:auto;">
+                            <button class="btn btnPrimary" id="btnStart">시작</button>
+                            <button class="btn btnGhost" id="btnReset">초기화</button>
+                        </div>
+                        <p class="footerHint" id="saveHint"></p>
+                    </div>
+                </div>
+            </div>
+            <p class="footerHint" style="margin:10px 4px 0 4px;">
+                TIP: 모바일에서는 화면 탭으로 점프!
+            </p>
+        </div>
+
+        <div class="panel sidePanel">
+            <div>
+                <p class="sectionTitle">LEADERBOARD</p>
+                <p class="smallText">회원만 최고점이 저장됩니다.</p>
+                <p class="dangerNote" id="guestNote" style="display:none;">
+                    게스트 상태 - 점수 저장 불가
+                </p>
+            </div>
+            <div class="leaderList" id="leaderList">
+                <div class="leaderItem"><span class="rank">#</span><span class="name">Loading...</span><span
+                        class="pts">-</span></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

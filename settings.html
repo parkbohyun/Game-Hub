@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GAME HUB - Settings</title>
+
+  <style>
+    :root{
+      --bg-color:#f0f4f8;
+      --card-bg:white;
+      --text-color:#2c3e50;
+      --text-muted:#6b7a90;
+      --border-color:#eef2f6;
+      --input-border:#ddd;
+      --input-bg:white;
+      --btn-primary:#4a90e2;
+      --btn-secondary-bg:#eef2f6;
+      --btn-secondary-text:#2c3e50;
+      --badge-shadow:rgba(0,0,0,0.05);
+      --warn-bg:#fff6e5;
+      --warn-border:#ffd89a;
+      --warn-text:#7a4b00;
+    }
+
+    [data-theme="dark"]{
+      --bg-color:#1a1a2e;
+      --card-bg:#16213e;
+      --text-color:#eaeaea;
+      --text-muted:#a0a0a0;
+      --border-color:#2a2a4a;
+      --input-border:#3a3a5a;
+      --input-bg:#1a1a2e;
+      --btn-primary:#4a90e2;
+      --btn-secondary-bg:#2a2a4a;
+      --btn-secondary-text:#eaeaea;
+      --badge-shadow:rgba(0,0,0,0.3);
+      --warn-bg:#3a2a1a;
+      --warn-border:#5a4a2a;
+      --warn-text:#ffd89a;
+    }
+
+    body{
+      font-family:'Pretendard', sans-serif;
+      background:var(--bg-color);
+      color:var(--text-color);
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+      box-sizing:border-box;
+      transition: background .3s, color .3s;
+    }
+
+    .wrap{
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .title{
+      font-size:1.4rem;
+      font-weight:900;
+      margin:0;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .card{
+      background:var(--card-bg);
+      border-radius:18px;
+      padding:22px;
+      box-shadow:0 10px 25px var(--badge-shadow);
+      border:1px solid var(--border-color);
+      margin-bottom:14px;
+    }
+
+    .card h2{
+      margin:0 0 10px 0;
+      font-size:1.1rem;
+    }
+
+    .muted{
+      color:var(--text-muted);
+      font-size:.95rem;
+      line-height:1.4;
+      margin:0 0 14px 0;
+    }
+
+    .divider{
+      height:1px;
+      background:var(--border-color);
+      margin:16px 0;
+    }
+
+    label{
+      display:block;
+      font-size:.92rem;
+      color:var(--text-muted);
+      margin:10px 0 6px;
+      font-weight:700;
+    }
+
+    input[type="text"], input[type="password"]{
+      padding:14px;
+      font-size:1rem;
+      border-radius:10px;
+      border:2px solid var(--input-border);
+      background:var(--input-bg);
+      color:var(--text-color);
+      width:100%;
+      box-sizing:border-box;
+    }
+
+    button{
+      padding:12px 14px;
+      border:none;
+      border-radius:10px;
+      background:var(--btn-primary);
+      color:white;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    button.secondary{
+      background:var(--btn-secondary-bg);
+      color:var(--btn-secondary-text);
+      border:1px solid var(--border-color);
+    }
+
+    button.full{
+      width:100%;
+      padding:14px 16px;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      background:var(--btn-secondary-bg);
+      color:var(--btn-secondary-text);
+      border:1px solid var(--border-color);
+      font-weight:800;
+    }
+
+    .theme-choices{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    .theme-btn{
+      flex:1;
+      min-width: 160px;
+      padding:14px 16px;
+      border-radius:12px;
+      border:2px solid var(--border-color);
+      background:transparent;
+      color:var(--text-color);
+      font-weight:900;
+    }
+
+    .theme-btn.active{
+      border-color: var(--btn-primary);
+      box-shadow: 0 8px 18px var(--badge-shadow);
+    }
+
+    .warn{
+      background:var(--warn-bg);
+      border:1px solid var(--warn-border);
+      color:var(--warn-text);
+      padding:12px;
+      border-radius:12px;
+      margin-top:10px;
+      line-height:1.4;
+      font-size:.95rem;
+    }
+
+    .msg{
+      min-height: 20px;
+      margin-top: 10px;
+      font-weight: 800;
+    }
+  </style>
+
+  <script src="/assets/js/config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <h1 class="title">Settings</h1>
+      <div class="row">
+        <button class="secondary" onclick="goHome()">← 홈으로</button>
+        <button class="secondary" onclick="doLogout()">로그아웃</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between; width:100%;">
+        <div class="pill" id="user-pill">세션 확인 중...</div>
+      </div>
+      <div class="warn" id="guest-warn" style="display:none;">
+        현재 <b>게스트(익명)</b>입니다. <b>닉네임/비밀번호 변경</b>은 회원 로그인 후 사용 가능합니다.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>테마</h2>
+      <p class="muted">라이트/다크 테마는 브라우저에 저장되어 모든 페이지에 동일하게 적용됩니다.</p>
+
+      <div class="theme-choices">
+        <button id="btn-light" class="theme-btn" onclick="setTheme('light')">🌙 라이트 모드</button>
+        <button id="btn-dark" class="theme-btn" onclick="setTheme('dark')">☀️ 다크 모드</button>
+      </div>
+
+      <div class="msg" id="theme-msg"></div>
+    </div>
+
+    <div class="card">
+      <h2>닉네임 변경</h2>
+      <p class="muted">리더보드 표시 이름으로 사용됩니다. (최대 20자)</p>
+
+      <label for="new-nick">새 닉네임</label>
+      <input id="new-nick" type="text" maxlength="20" placeholder="예: Bohyun" />
+
+      <div class="divider"></div>
+      <button class="full" onclick="changeNickname()">닉네임 저장</button>
+
+      <div class="msg" id="nick-msg"></div>
+    </div>
+
+    <div class="card">
+      <h2>비밀번호 변경</h2>
+      <p class="muted">보안을 위해 현재 비밀번호 확인(재인증) 후 변경합니다.</p>
+
+      <label for="current-pw">현재 비밀번호</label>
+      <input id="current-pw" type="password" placeholder="현재 비밀번호" autocomplete="current-password"/>
+
+      <label for="new-pw">새 비밀번호</label>
+      <input id="new-pw" type="password" placeholder="새 비밀번호(6자 이상 권장)" autocomplete="new-password"/>
+
+      <label for="new-pw2">새 비밀번호 확인</label>
+      <input id="new-pw2" type="password" placeholder="새 비밀번호 재입력" autocomplete="new-password"/>
+
+      <div class="divider"></div>
+      <button class="full" onclick="changePassword()">비밀번호 변경</button>
+
+      <div class="msg" id="pw-msg"></div>
+    </div>
+  </div>
+
+  <script>
+    // ===== 테마 =====
+    function initTheme(){
+      const saved = localStorage.getItem('gameHubTheme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+      updateThemeButtons(saved);
+    }
+
+    function setTheme(theme){
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('gameHubTheme', theme);
+      updateThemeButtons(theme);
+      setMsg('theme-msg', `테마가 "${theme === 'dark' ? '다크' : '라이트'}"로 적용되었습니다.`, false);
+    }
+
+    function updateThemeButtons(theme){
+      document.getElementById('btn-light').classList.toggle('active', theme === 'light');
+      document.getElementById('btn-dark').classList.toggle('active', theme === 'dark');
+    }
+
+    initTheme();
+
+    // ===== Firebase =====
+    const firebaseConfig = window.FIREBASE_CONFIG;
+    if (!firebaseConfig) {
+      console.error("FIREBASE_CONFIG is not defined! Please make sure config.js is loaded.");
+    }
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    // ===== 유틸 =====
+    function setMsg(id, msg, isError){
+      const el = document.getElementById(id);
+      el.textContent = msg || "";
+      el.style.color = isError ? "#c0392b" : (document.documentElement.getAttribute('data-theme') === 'dark' ? "#eaeaea" : "#2c3e50");
+    }
+
+    function goHome(){
+      window.location.href = "index.html";
+    }
+
+    async function doLogout(){
+      try{
+        await auth.signOut();
+        // 기존 index.html 흐름과 맞추기 위해 익명 로그인으로 복귀
+        await auth.signInAnonymously();
+        window.location.href = "index.html";
+      }catch(e){
+        alert("로그아웃 실패: " + (e?.message || e));
+      }
+    }
+
+    function updateUserUI(user){
+      const pill = document.getElementById('user-pill');
+      const warn = document.getElementById('guest-warn');
+
+      if(!user){
+        pill.textContent = "세션 확인 중...";
+        warn.style.display = "none";
+        return;
+      }
+
+      if(user.isAnonymous){
+        pill.textContent = "게스트(익명)";
+        warn.style.display = "block";
+      }else{
+        pill.textContent = `회원: ${user.displayName || user.email || "회원"}`;
+        warn.style.display = "none";
+      }
+
+      // 입력창에 현재 닉네임 프리필
+      if(!user.isAnonymous){
+        document.getElementById('new-nick').value = (user.displayName || "");
+      }
+    }
+
+    function requireMember(){
+      const user = auth.currentUser;
+      if(!user || user.isAnonymous){
+        setMsg('nick-msg', "회원 로그인 상태에서만 변경할 수 있습니다.", true);
+        setMsg('pw-msg', "회원 로그인 상태에서만 변경할 수 있습니다.", true);
+        return false;
+      }
+      return true;
+    }
+
+    function humanizeAuthError(e){
+      const code = e?.code || "";
+      if (code === "auth/requires-recent-login") return "보안을 위해 재로그인이 필요합니다. 로그아웃 후 다시 로그인한 다음 시도하세요.";
+      if (code === "auth/wrong-password") return "현재 비밀번호가 올바르지 않습니다.";
+      if (code === "auth/too-many-requests") return "요청이 많습니다. 잠시 후 다시 시도하세요.";
+      return e?.message || "처리 중 오류가 발생했습니다.";
+    }
+
+    // ===== 닉네임 변경 =====
+    async function changeNickname(){
+      setMsg('nick-msg', "", false);
+
+      if(!requireMember()) return;
+
+      const user = auth.currentUser;
+      const newNick = document.getElementById('new-nick').value.trim();
+
+      if(!newNick) return setMsg('nick-msg', "새 닉네임을 입력하세요.", true);
+      if(newNick.length > 20) return setMsg('nick-msg', "닉네임은 20자 이하여야 합니다.", true);
+
+      try{
+        await user.updateProfile({ displayName: newNick });
+
+        await db.collection("users").doc(user.uid).set({
+          displayName: newNick,
+          email: user.email || "",
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+
+        updateUserUI(user);
+        setMsg('nick-msg', "닉네임이 저장되었습니다.", false);
+      }catch(e){
+        setMsg('nick-msg', humanizeAuthError(e), true);
+      }
+    }
+
+    // ===== 비밀번호 변경 (재인증 포함) =====
+    async function changePassword(){
+      setMsg('pw-msg', "", false);
+
+      if(!requireMember()) return;
+
+      const user = auth.currentUser;
+
+      const providers = (user.providerData || []).map(p => p.providerId);
+      const hasPasswordProvider = providers.includes("password");
+      if(!hasPasswordProvider){
+        return setMsg('pw-msg', "이 계정은 이메일/비밀번호 방식이 아닙니다. (비밀번호 변경 불가)", true);
+      }
+
+      const currentPw = document.getElementById('current-pw').value;
+      const newPw = document.getElementById('new-pw').value;
+      const newPw2 = document.getElementById('new-pw2').value;
+
+      if(!currentPw || !newPw || !newPw2) return setMsg('pw-msg', "모든 비밀번호 항목을 입력하세요.", true);
+      if(newPw !== newPw2) return setMsg('pw-msg', "새 비밀번호가 서로 일치하지 않습니다.", true);
+      if(newPw.length < 6) return setMsg('pw-msg', "새 비밀번호는 6자 이상을 권장합니다.", true);
+
+      try{
+        const email = user.email || "";
+        const cred = firebase.auth.EmailAuthProvider.credential(email, currentPw);
+
+        await user.reauthenticateWithCredential(cred);
+        await user.updatePassword(newPw);
+
+        document.getElementById('current-pw').value = "";
+        document.getElementById('new-pw').value = "";
+        document.getElementById('new-pw2').value = "";
+
+        setMsg('pw-msg', "비밀번호가 변경되었습니다.", false);
+      }catch(e){
+        setMsg('pw-msg', humanizeAuthError(e), true);
+      }
+    }
+
+    // ===== 진입 시 세션 처리 =====
+    auth.onAuthStateChanged(async (user) => {
+      if(!user){
+        // Settings 직접 진입 시에도 세션 보장
+        await auth.signInAnonymously();
+        return;
+      }
+      updateUserUI(user);
+    });
+  </script>
+</body>
+</html>

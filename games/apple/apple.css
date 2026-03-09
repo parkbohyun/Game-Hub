@@ -1,0 +1,307 @@
+:root {
+    --bg: #fff6f1;
+    --panel: #ffffff;
+    --panel-shadow: rgba(40, 10, 10, 0.08);
+    --board-bg: #ffded1;
+    --board-border: rgba(120, 30, 20, 0.12);
+    --text: #3a1a16;
+    --muted: rgba(58, 26, 22, 0.65);
+    --primary: #e83b2f;
+    --primary-hover: #d53127;
+    --accent: #2da44e;
+    --accent-2: #ffb02e;
+    --danger: #d92d20;
+    --cell-bg: rgba(255, 255, 255, 0.85);
+    --cell-empty: rgba(255, 255, 255, 0.35);
+    --cell-border: rgba(90, 25, 18, 0.10);
+    --cell-selected: rgba(255, 176, 46, 0.35);
+    --cell-selected-border: rgba(232, 59, 47, 0.6);
+    --chip-bg: rgba(232, 59, 47, 0.12);
+    --chip-border: rgba(232, 59, 47, 0.25);
+    --btn-bg: var(--primary);
+    --btn-hover: var(--primary-hover);
+    --btn-text: #ffffff;
+    --btn-sub-bg: rgba(58, 26, 22, 0.08);
+    --btn-sub-hover: rgba(58, 26, 22, 0.12);
+    --max-width: 720px;
+    /* 가로형 게임판을 위해 소폭 확장 */
+    --radius: 14px;
+}
+
+[data-theme="dark"] {
+    --bg: #121018;
+    --panel: #171422;
+    --panel-shadow: rgba(0, 0, 0, 0.35);
+    --board-bg: #201a2b;
+    --board-border: rgba(255, 255, 255, 0.10);
+    --text: #f1eef9;
+    --muted: rgba(241, 238, 249, 0.66);
+    --primary: #ff4d3d;
+    --primary-hover: #ff3a2a;
+    --cell-bg: rgba(255, 255, 255, 0.1);
+    --cell-selected: rgba(255, 191, 74, 0.25);
+}
+
+html {
+    background: var(--bg);
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
+    touch-action: manipulation;
+}
+
+.wrap {
+    width: 100%;
+    max-width: var(--max-width);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.topbar {
+    background: var(--panel);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px var(--panel-shadow);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.top-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.title {
+    font-weight: 900;
+    font-size: 1.1rem;
+}
+
+.badge {
+    font-size: 0.8rem;
+    background: var(--chip-bg);
+    padding: 4px 8px;
+    border-radius: 8px;
+    color: var(--primary);
+}
+
+.stats-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(0, 0, 0, 0.04);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.9rem;
+}
+
+.btn-group {
+    display: flex;
+    gap: 6px;
+}
+
+.btn {
+    border: 0;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-weight: 800;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: transform 0.1s;
+}
+
+.btn:active {
+    transform: scale(0.96);
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-sub {
+    background: var(--btn-sub-bg);
+    color: var(--text);
+}
+
+.board-card {
+    background: var(--panel);
+    border-radius: var(--radius);
+    padding: 10px;
+    box-shadow: 0 4px 12px var(--panel-shadow);
+}
+
+.board-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.hint {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.sum-indicator {
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #f0f0f0;
+    font-weight: 900;
+    font-size: 0.9rem;
+    border: 2px solid transparent;
+}
+
+.sum-indicator.ok {
+    background: #e6ffed;
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.board-container {
+    width: 100%;
+    overflow: hidden;
+    /* 영역 밖 드래그 방지 */
+    touch-action: none;
+}
+
+.board {
+    display: grid;
+    background: var(--board-bg);
+    border-radius: 12px;
+    padding: 8px;
+    gap: 4px;
+    /* 간격 고정 */
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+.cell {
+    aspect-ratio: 1 / 1;
+    background: var(--cell-bg);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.1s;
+    user-select: none;
+}
+
+.cell.selected {
+    background: var(--cell-selected);
+    box-shadow: inset 0 0 0 2px var(--cell-selected-border);
+    transform: scale(0.95);
+    z-index: 2;
+}
+
+.cell.empty {
+    background: var(--cell-empty);
+    border: 1px dashed rgba(0, 0, 0, 0.05);
+}
+
+.apple {
+    width: 90%;
+    height: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.apple-icon {
+    font-size: clamp(16px, 4vw, 24px);
+    line-height: 1;
+    z-index: 1;
+}
+
+.apple-num {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    font-weight: 900;
+    font-size: clamp(12px, 3vw, 16px);
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+
+/* Overlay / Modals */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.overlay.show {
+    display: flex;
+}
+
+.modal {
+    background: var(--panel);
+    color: var(--text);
+    padding: 20px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 8px 32px var(--panel-shadow);
+}
+
+.modal h3 {
+    color: var(--primary);
+    margin: 0 0 10px 0;
+}
+
+.lb {
+    margin: 15px 0;
+    max-height: 200px;
+    overflow-y: auto;
+    text-align: left;
+}
+
+.lb-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid var(--board-border);
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+.lb-item:last-child {
+    border-bottom: none;
+}
+
+[data-theme="dark"] .overlay {
+    background: rgba(0, 0, 0, 0.7);
+}

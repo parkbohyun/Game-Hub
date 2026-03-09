@@ -1,0 +1,190 @@
+[build]
+  command = "bash build.sh"
+  publish = "."
+
+# -----------------------------
+# Redirects
+# -----------------------------
+
+# /index.html 로 접근해도 루트(/)로 정규화
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/index"
+  to = "/"
+  status = 301
+  force = true
+
+# ===== Pretty URL: /games/<game> → /games/<game>/<game>.html =====
+[[redirects]]
+  from = "/games/sudoku"
+  to = "/games/sudoku/sudoku.html"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/games/sudoku/"
+  to = "/games/sudoku/sudoku.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/games/2048"
+  to = "/games/2048/2048.html"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/games/2048/"
+  to = "/games/2048/2048.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/games/maze-eater"
+  to = "/games/maze-eater/maze-eater.html"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/games/maze-eater/"
+  to = "/games/maze-eater/maze-eater.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/games/merge-fruit"
+  to = "/games/merge-fruit/merge-fruit.html"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/games/merge-fruit/"
+  to = "/games/merge-fruit/merge-fruit.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/games/blockblast"
+  to = "/games/blockblast/blockblast.html"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/games/blockblast/"
+  to = "/games/blockblast/blockblast.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/games/apple"
+  to = "/games/apple/apple.html"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/games/apple/"
+  to = "/games/apple/apple.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/games/dino"
+  to = "/games/dino/dino.html"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/games/dino/"
+  to = "/games/dino/dino.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/games/minesweeper"
+  to = "/games/minesweeper/minesweeper.html"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/games/minesweeper/"
+  to = "/games/minesweeper/minesweeper.html"
+  status = 301
+  force = true
+
+# ===== (선택) 더 짧은 Pretty URL: /<game> → 게임 페이지 =====
+# 필요 없으면 이 섹션은 통째로 삭제하세요.
+[[redirects]]
+  from = "/sudoku"
+  to = "/games/sudoku/sudoku.html"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/2048"
+  to = "/games/2048/2048.html"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/maze-eater"
+  to = "/games/maze-eater/maze-eater.html"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/merge-fruit"
+  to = "/games/merge-fruit/merge-fruit.html"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/blockblast"
+  to = "/games/blockblast/blockblast.html"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/apple"
+  to = "/games/apple/apple.html"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/dino"
+  to = "/games/dino/dino.html"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/minesweeper"
+  to = "/games/minesweeper/minesweeper.html"
+  status = 301
+  force = true
+
+# (선택) SPA 라우팅(React/Vue 등)일 때만 사용 — 현재 구조에서는 켜지 마세요.
+# [[redirects]]
+#   from = "/*"
+#   to = "/index.html"
+#   status = 200
+
+# -----------------------------
+# Headers
+# -----------------------------
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/favicon.ico"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/site.webmanifest"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

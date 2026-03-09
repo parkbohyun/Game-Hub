@@ -1,0 +1,351 @@
+:root {
+  --bg-color: #4a752c;
+  /* 구글 지뢰찾기 배경색 */
+  --header-bg: #4a752c;
+  --grid-bg: #578a34;
+  --cell-bg-light: #aad751;
+  --cell-bg-dark: #a2d149;
+  --cell-revealed-light: #e5c29f;
+  --cell-revealed-dark: #d7b899;
+  --text-color: #ffffff;
+  --btn-bg: #355420;
+  --btn-hover: #2a411a;
+}
+
+[data-theme="dark"] {
+  --bg-color: #1a1a2e;
+  --header-bg: #16213e;
+  --grid-bg: #0f3460;
+  --cell-bg-light: #2a2a4a;
+  --cell-bg-dark: #3a3a5a;
+  --cell-revealed-light: #1a1a2e;
+  --cell-revealed-dark: #16213e;
+  --text-color: #e94560;
+  --btn-bg: #0f3460;
+  --btn-hover: #533483;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  min-height: 100vh;
+  color: white;
+  transition: background 0.3s;
+  overflow-x: hidden;
+  touch-action: manipulation;
+}
+
+.header {
+  width: 100%;
+  max-width: 600px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.nav-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.home-btn {
+  text-decoration: none;
+  background: var(--btn-bg);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.difficulty-select {
+  background: var(--btn-bg);
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.status-bar {
+  width: 100%;
+  max-width: 500px;
+  background: var(--btn-bg);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-around;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 11px;
+  display: block;
+  opacity: 0.8;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* 지뢰찾기 그리드 */
+.grid-container {
+  background: var(--grid-bg);
+  border: 6px solid var(--grid-bg);
+  border-radius: 8px;
+  display: grid;
+  user-select: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.cell {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+/* 구글 스타일 체커보드 */
+.cell.light {
+  background-color: var(--cell-bg-light);
+}
+
+.cell.dark {
+  background-color: var(--cell-bg-dark);
+}
+
+.cell.revealed.light {
+  background-color: var(--cell-revealed-light);
+}
+
+.cell.revealed.dark {
+  background-color: var(--cell-revealed-dark);
+}
+
+.cell.flagged::after {
+  content: "🚩";
+  font-size: 16px;
+}
+
+.cell.mine {
+  background-color: #d32f2f !important;
+}
+
+.cell.mine::after {
+  content: "💣";
+}
+
+/* 숫자별 색상 (구글 지뢰찾기 기준) */
+.n1 {
+  color: #1976d2;
+}
+
+.n2 {
+  color: #388e3c;
+}
+
+.n3 {
+  color: #d32f2f;
+}
+
+.n4 {
+  color: #7b1fa2;
+}
+
+.n5 {
+  color: #ff8f00;
+}
+
+.n6 {
+  color: #0097a7;
+}
+
+.controls-info {
+  margin-top: 15px;
+  font-size: 13px;
+  text-align: center;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+#user-badge {
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+/* 커스텀 팝업 모달 */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.popup-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.popup-modal {
+  background: var(--btn-bg);
+  border-radius: 18px;
+  padding: 30px 25px;
+  max-width: 340px;
+  width: 90%;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  transform: scale(0.9);
+  transition: transform 0.25s ease;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.popup-overlay.show .popup-modal {
+  transform: scale(1);
+}
+
+.popup-icon {
+  font-size: 3.5rem;
+  margin-bottom: 15px;
+}
+
+.popup-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.popup-message {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.popup-score-box {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 15px;
+  margin: 15px 0;
+}
+
+.popup-score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-weight: 600;
+}
+
+.popup-score-row .label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+}
+
+.popup-score-row .value {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.popup-score-row .value.highlight {
+  color: #ffd700;
+}
+
+.popup-score-row .value.new-record {
+  color: #4ade80;
+}
+
+.popup-btn {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 12px;
+  background: #4ade80;
+  color: #1a1a2e;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #22c55e;
+  transition: 0.1s;
+  margin: 5px;
+}
+
+.popup-btn:active {
+  transform: translateY(3px);
+  box-shadow: none;
+}
+
+.popup-btn.secondary {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.popup-btn.danger {
+  background: #ef4444;
+  box-shadow: 0 4px 0 #dc2626;
+  color: white;
+}
+
+.popup-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.popup-sub {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 12px;
+}
+
+/* 어려움 모드(20x24) 대응 */
+.grid-container.hard-mode {
+  max-width: 100vw;
+  overflow: auto;
+}
+
+.grid-container.hard-mode .cell {
+  width: 24px;
+  height: 24px;
+  font-size: 14px;
+}
+
+@media (max-width: 500px) {
+  .cell {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+
+  .grid-container.hard-mode .cell {
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+  }
+}
