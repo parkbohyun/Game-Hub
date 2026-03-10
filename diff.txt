@@ -1,0 +1,33 @@
+diff --git a/index.html b/index.html
+index 5fdca8a..3fd3097 100644
+--- a/index.html
++++ b/index.html
+@@ -11,7 +11,7 @@
+   <!-- 기본 SEO -->
+   <title>GAME HUB</title>
+   <meta name="description" content="Sudoku, 2048, Maze Eater, Merge Fruit 등 다양한 웹게임을 한 곳에서 즐기는 GAME HUB" />
+-  <link rel="canonical" href="https://YOUR_DOMAIN/index.html" />
++  <link rel="canonical" href="https://game.d-hub.kr/index.html" />
+   <meta name="robots" content="index,follow" />
+ 
+   <!-- Open Graph (카톡/슬랙/디스코드/페북 등) -->
+@@ -20,8 +20,8 @@
+   <meta property="og:site_name" content="GAME HUB" />
+   <meta property="og:title" content="GAME HUB - 웹게임 모음" />
+   <meta property="og:description" content="Sudoku, 2048, Maze Eater, Merge Fruit 등 다양한 웹게임을 한 곳에서 플레이하세요." />
+-  <meta property="og:url" content="https://YOUR_DOMAIN/index.html" />
+-  <meta property="og:image" content="https://YOUR_DOMAIN/assets/og/og-gamehub-1200x630.png" />
++  <meta property="og:url" content="https://game.d-hub.kr/index.html" />
++  <meta property="og:image" content="https://game.d-hub.kr/assets/og/og-gamehub-1200x630.png" />
+   <meta property="og:image:width" content="1200" />
+   <meta property="og:image:height" content="630" />
+ 
+@@ -29,7 +29,7 @@
+   <meta name="twitter:card" content="summary_large_image" />
+   <meta name="twitter:title" content="GAME HUB - 웹게임 모음" />
+   <meta name="twitter:description" content="Sudoku, 2048, Maze Eater, Merge Fruit 등 다양한 웹게임을 한 곳에서 플레이하세요." />
+-  <meta name="twitter:image" content="https://YOUR_DOMAIN/assets/og/og-gamehub-1200x630.png" />
++  <meta name="twitter:image" content="https://game.d-hub.kr/assets/og/og-gamehub-1200x630.png" />
+ 
+   <!-- Favicon / Icons -->
+   <link rel="icon" href="/favicon.ico" />

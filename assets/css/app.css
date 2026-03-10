@@ -62,8 +62,8 @@
   }
   
   .container {
-    width: 90%;
-    max-width: 800px;
+    width: 95%;
+    max-width: 1000px;
     text-align: center;
   }
   
@@ -74,7 +74,7 @@
     border-radius: 20px;
     box-shadow: 0 10px 25px var(--badge-shadow);
     width: 100%;
-    max-width: 460px;
+    max-width: 900px;
     margin: 0 auto;
   }
   
