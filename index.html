@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
 
-<!DOCTYPE html>
-<html lang="ko">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,7 +8,7 @@
   <!-- 기본 SEO -->
   <title>GAME HUB</title>
   <meta name="description" content="Sudoku, 2048, Maze Eater, Merge Fruit 등 다양한 웹게임을 한 곳에서 즐기는 GAME HUB" />
-  <link rel="canonical" href="https://YOUR_DOMAIN/index.html" />
+  <link rel="canonical" href="https://game.d-hub.kr/index.html" />
   <meta name="robots" content="index,follow" />
 
   <!-- Open Graph (카톡/슬랙/디스코드/페북 등) -->
@@ -20,8 +17,8 @@
   <meta property="og:site_name" content="GAME HUB" />
   <meta property="og:title" content="GAME HUB - 웹게임 모음" />
   <meta property="og:description" content="Sudoku, 2048, Maze Eater, Merge Fruit 등 다양한 웹게임을 한 곳에서 플레이하세요." />
-  <meta property="og:url" content="https://YOUR_DOMAIN/index.html" />
-  <meta property="og:image" content="https://YOUR_DOMAIN/assets/og/og-gamehub-1200x630.png" />
+  <meta property="og:url" content="https://game.d-hub.kr/index.html" />
+  <meta property="og:image" content="https://game.d-hub.kr/assets/og/og-gamehub-1200x630.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
 
@@ -29,7 +26,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="GAME HUB - 웹게임 모음" />
   <meta name="twitter:description" content="Sudoku, 2048, Maze Eater, Merge Fruit 등 다양한 웹게임을 한 곳에서 플레이하세요." />
-  <meta name="twitter:image" content="https://YOUR_DOMAIN/assets/og/og-gamehub-1200x630.png" />
+  <meta name="twitter:image" content="https://game.d-hub.kr/assets/og/og-gamehub-1200x630.png" />
 
   <!-- Favicon / Icons -->
   <link rel="icon" href="/favicon.ico" />
@@ -43,22 +40,100 @@
   <link rel="stylesheet" href="assets/css/app.css" />
   <script src="assets/js/theme.js"></script>
 
+  <!-- Firebase 및 설정 -->
   <script src="/assets/js/config.js"></script>
-  <div id="score-content" style="margin-top: 20px;">
-    <table>
-      <thead>
-        <tr>
-          <th>순위</th>
-          <th>ID</th>
-          <th>기록/점수</th>
-          <th>상세</th>
-        </tr>
-      </thead>
-      <tbody id="score-body"></tbody>
-    </table>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="assets/js/firebase.js"></script>
+  <script src="assets/js/common.js"></script>
+
+  <script src="assets/js/index.js" defer></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="topbar">
+        <h1 style="margin:0; font-weight:900; font-size:1.8rem; color:var(--text-color);">GAME HUB</h1>
+        <div class="row">
+          <div class="badge" id="user-badge" style="margin-right:8px;">세션 준비 중...</div>
+          <button class="secondary inline" onclick="goSettings()">설정</button>
+          <button class="secondary inline" onclick="goMember()">계정</button>
+          <button class="secondary inline" onclick="logout()">로그아웃</button>
+        </div>
+      </div>
+
+      <div class="warn" id="score-warn" style="display: none;">
+        게스트(비로그인) 상태입니다. 점수가 저장되지 않습니다.
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="menu-container">
+        <a href="games/sudoku/sudoku.html" class="game-card">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">🔢</div>
+          Sudoku
+        </a>
+        <a href="games/2048/2048.html" class="game-card">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">🔳</div>
+          2048
+        </a>
+        <a href="games/maze-eater/maze-eater.html" class="game-card">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">👻</div>
+          Maze Eater
+        </a>
+        <a href="games/merge-fruit/merge-fruit.html" class="game-card">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">🍉</div>
+          Merge Fruit
+        </a>
+        <a href="games/blockblast/blockblast.html" class="game-card">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">🧱</div>
+          Block Blast
+        </a>
+        <a href="games/dino/dino.html" class="game-card">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">🦖</div>
+          Chrome Dino
+        </a>
+        <a href="games/minesweeper/minesweeper.html" class="game-card">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">💣</div>
+          Minesweeper
+        </a>
+        <a href="games/apple/apple.html" class="game-card">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">🍎</div>
+          Apple
+        </a>
+      </div>
+
+      <div class="leaderboard">
+        <h2 style="margin-top:0;">🏆 명예의 전당 (Top 5)</h2>
+        <div class="tabs">
+          <button class="tab-btn active" onclick="loadSudokuScores()">Sudoku</button>
+          <button class="tab-btn" onclick="load2048Scores()">2048</button>
+          <button class="tab-btn" onclick="loadMazeEaterScores()">Maze Eater</button>
+          <button class="tab-btn" onclick="loadMergeFruitScores()">Merge</button>
+          <button class="tab-btn" onclick="loadBlockBlastScores()">Block</button>
+          <button class="tab-btn" onclick="loadAppleScores()">Apple</button>
+          <button class="tab-btn" onclick="loadDinoScores()">Dino</button>
+          <button class="tab-btn" onclick="loadMinesweeperScores()">Mine</button>
+        </div>
+
+        <div id="score-content" style="margin-top: 20px;">
+          <table>
+            <thead>
+              <tr>
+                <th>순위</th>
+                <th>ID</th>
+                <th>기록/점수</th>
+                <th>상세</th>
+              </tr>
+            </thead>
+            <tbody id="score-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
-  </div>
-  </div>
-  </body>
+</body>
 
 </html>

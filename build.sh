@@ -1,5 +1,5 @@
 #!/bin/bash
-# Netlify 및 Cloudflare Pages 빌드 시 환경변수를 주입하기 위한 스크립트
+# Netlify 빌드 시 환경변수를 주입하기 위한 스크립트
 
 echo "Generating assets/js/config.js with environment variables..."
 
