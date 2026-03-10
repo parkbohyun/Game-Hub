@@ -78,6 +78,37 @@ python -m http.server
 - Ensure that your `.env` file is never committed or pushed to public repositories.
 - Verify that `.env` is included in your `.gitignore` to prevent exposing sensitive Firebase credentials.
 
+## Deployment
+
+This project can be easily deployed to modern static hosting platforms like **Cloudflare Pages** or **Netlify**.
+
+### 1. Cloudflare Pages
+
+Cloudflare Pages uses the root `_redirects` and `_headers` files for routing and security headers.
+
+**Build Settings**:
+- **Framework preset**: `None`
+- **Build command**: `bash build.sh`
+- **Build output directory**: `/` (or leave empty to deploy the root directory)
+
+### 2. Netlify
+
+Netlify uses the `netlify.toml` file included in the repository for its build, routing, and header configurations.
+
+**Build Settings**:
+- **Base directory**: Not set
+- **Build command**: `bash build.sh`
+- **Publish directory**: `/` (or leave empty)
+
+### Environment Variables
+Regardless of the platform you choose, you must configure the following environment variables in your hosting provider's dashboard (e.g., Cloudflare Pages Settings or Netlify Site Settings):
+- `FIREBASE_API_KEY`
+- `FIREBASE_AUTH_DOMAIN`
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_STORAGE_BUCKET`
+- `FIREBASE_MESSAGING_SENDER_ID`
+- `FIREBASE_APP_ID`
+
 ## License
 
 This project is licensed under the MIT License. See the `LICENSE` file for more details.

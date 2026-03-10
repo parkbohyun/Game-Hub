@@ -1,0 +1,28 @@
+/index.html / 301
+/index / 301
+
+/games/sudoku /games/sudoku/sudoku.html 301
+/games/sudoku/ /games/sudoku/sudoku.html 301
+/games/2048 /games/2048/2048.html 301
+/games/2048/ /games/2048/2048.html 301
+/games/maze-eater /games/maze-eater/maze-eater.html 301
+/games/maze-eater/ /games/maze-eater/maze-eater.html 301
+/games/merge-fruit /games/merge-fruit/merge-fruit.html 301
+/games/merge-fruit/ /games/merge-fruit/merge-fruit.html 301
+/games/blockblast /games/blockblast/blockblast.html 301
+/games/blockblast/ /games/blockblast/blockblast.html 301
+/games/apple /games/apple/apple.html 301
+/games/apple/ /games/apple/apple.html 301
+/games/dino /games/dino/dino.html 301
+/games/dino/ /games/dino/dino.html 301
+/games/minesweeper /games/minesweeper/minesweeper.html 301
+/games/minesweeper/ /games/minesweeper/minesweeper.html 301
+
+/sudoku /games/sudoku/sudoku.html 301
+/2048 /games/2048/2048.html 301
+/maze-eater /games/maze-eater/maze-eater.html 301
+/merge-fruit /games/merge-fruit/merge-fruit.html 301
+/blockblast /games/blockblast/blockblast.html 301
+/apple /games/apple/apple.html 301
+/dino /games/dino/dino.html 301
+/minesweeper /games/minesweeper/minesweeper.html 301
