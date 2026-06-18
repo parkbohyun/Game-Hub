@@ -197,7 +197,7 @@ function loadDinoScores() { loadScores("dino"); }
 function loadMinesweeperScores() { loadScores("minesweeper"); }
 
 function goSettings() {
-  window.location.href = "Settings.html";
+  window.location.href = "settings.html";
 }
 
 function goMember() {

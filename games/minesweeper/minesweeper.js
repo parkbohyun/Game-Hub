@@ -180,6 +180,7 @@ function initBoard() {
       // 모바일 롱탭 구현
       let touchTimer;
       cell.ontouchstart = () => { touchTimer = setTimeout(() => toggleFlag(r, c), 500); };
+      cell.ontouchmove = () => clearTimeout(touchTimer);
       cell.ontouchend = () => clearTimeout(touchTimer);
 
       gridEl.appendChild(cell);
@@ -246,7 +247,7 @@ function setupMines(exR, exC) {
     let r = Math.floor(Math.random() * rows);
     let c = Math.floor(Math.random() * cols);
     // 첫 클릭 지점 주변 3x3은 지뢰 제외 (구글 방식)
-    if (!board[r][c].mine && Math.abs(r - exR) > 1 && Math.abs(c - exC) > 1) {
+    if (!board[r][c].mine && (Math.abs(r - exR) > 1 || Math.abs(c - exC) > 1)) {
       board[r][c].mine = true;
       placed++;
     }

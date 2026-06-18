@@ -181,6 +181,13 @@ function resetGame() {
   score = 0;
   combo = 0;
   selectedPieceIndex = -1;
+
+  // 진행 중이던 드래그/플로팅 상태 정리 (재시작 시 유령 블럭/스테일 인덱스 방지)
+  dragging = false;
+  dragPieceIndex = -1;
+  if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; }
+  if (floatingEl) { floatingEl.remove(); floatingEl = null; }
+
   updateScore(0, true);
 
   grid = Array.from({ length: GRID }, () => Array.from({ length: GRID }, () => null));
@@ -493,32 +500,47 @@ function renderAll() {
 /**********************
  * Input handling (개선된 드래그 시스템)
  **********************/
-let dragOffsetX = 0;
-let dragOffsetY = 0;
 let lastClientX = 0;
 let lastClientY = 0;
 let animationFrameId = null;
 
+// 플로팅 고스트(드래그 미리보기)의 크기/띄움 상수.
+// getBoardAnchorFromClient가 "보이는 위치 = 놓이는 칸"을 계산할 때 동일 기준으로 사용한다.
+const GHOST_CELL = 22;                       // 고스트 셀 한 칸(px)
+const GHOST_GAP = 7;                         // 고스트 셀 간격(px)
+const GHOST_PITCH = GHOST_CELL + GHOST_GAP;  // 셀 + 간격(px)
+const GHOST_LIFT = 40;                       // 손가락 위로 띄우는 거리(px)
+
 function getBoardAnchorFromClient(clientX, clientY) {
   const r = boardEl.getBoundingClientRect();
-  // 플로팅 블럭 크기를 고려한 오프셋 조정
   const p = dragPieceIndex >= 0 ? pieces[dragPieceIndex] : null;
-  let offsetAdjustX = 0;
-  let offsetAdjustY = 0;
 
-  if (p && floatingEl) {
+  // 화면에 그려지는 고스트의 첫 번째 셀(0,0) 중심을 기준점으로 삼아
+  // 미리보기 위치와 실제로 놓이는 칸이 일치하도록 한다.
+  let refX = clientX;
+  let refY = clientY;
+  if (p) {
     const b = shapeBounds(p.shape);
-    const cellSize = r.width / GRID;
-    // 블럭의 첫 번째 셀이 커서 위치에 오도록 조정
-    offsetAdjustX = cellSize * 0.5;
-    offsetAdjustY = cellSize * 0.5;
+    refX = clientX - (b.w * GHOST_PITCH) / 2 + GHOST_CELL / 2;
+    refY = clientY - (b.h * GHOST_PITCH) / 2 - GHOST_LIFT + GHOST_CELL / 2;
   }
 
-  const rx = (clientX - r.left - offsetAdjustX) / r.width;
-  const ry = (clientY - r.top - offsetAdjustY) / r.height;
-  const ax = Math.floor(rx * GRID);
-  const ay = Math.floor(ry * GRID);
-  return { ax, ay, inside: rx >= -0.1 && rx < 1.1 && ry >= -0.1 && ry < 1.1 };
+  const inside =
+    refX >= r.left - 24 && refX <= r.right + 24 &&
+    refY >= r.top - 24 && refY <= r.bottom + 24;
+
+  // 기준점 아래의 실제 보드 셀을 직접 찾아 패딩/셀 간격의 영향을 제거한다.
+  // (.floating은 pointer-events:none 이라 hit-test에 잡히지 않는다)
+  const hit = document.elementFromPoint(refX, refY);
+  const cell = hit && hit.closest ? hit.closest(".cell") : null;
+  if (cell && cell.dataset.x !== undefined) {
+    return { ax: Number(cell.dataset.x), ay: Number(cell.dataset.y), inside };
+  }
+
+  // 셀 사이 간격/여백 위일 때를 위한 근사 매핑(폴백)
+  const ax = Math.floor(((refX - r.left) / r.width) * GRID);
+  const ay = Math.floor(((refY - r.top) / r.height) * GRID);
+  return { ax, ay, inside };
 }
 
 function updateFloatingPosition(clientX, clientY, immediate = false) {
@@ -528,12 +550,12 @@ function updateFloatingPosition(clientX, clientY, immediate = false) {
   if (!p) return;
 
   const b = shapeBounds(p.shape);
-  const floatingWidth = b.w * 29; // 22px + 7px gap
-  const floatingHeight = b.h * 29;
+  const floatingWidth = b.w * GHOST_PITCH;
+  const floatingHeight = b.h * GHOST_PITCH;
 
   // 블럭 중심이 커서를 따라가도록
   const targetX = clientX - floatingWidth / 2;
-  const targetY = clientY - floatingHeight / 2 - 40; // 손가락 위로 올림
+  const targetY = clientY - floatingHeight / 2 - GHOST_LIFT; // 손가락 위로 올림
 
   if (immediate) {
     floatingEl.style.left = targetX + "px";
@@ -569,17 +591,17 @@ function createFloatingFromPiece(pieceIndex) {
 
   const g = document.createElement("div");
   g.className = "piece-grid";
-  g.style.gridTemplateColumns = `repeat(${b.w}, 22px)`;
-  g.style.gridTemplateRows = `repeat(${b.h}, 22px)`;
-  g.style.gap = "7px";
+  g.style.gridTemplateColumns = `repeat(${b.w}, ${GHOST_CELL}px)`;
+  g.style.gridTemplateRows = `repeat(${b.h}, ${GHOST_CELL}px)`;
+  g.style.gap = GHOST_GAP + "px";
 
   const set = new Set(shape.map(([x, y]) => `${x},${y}`));
   for (let y = 0; y < b.h; y++) {
     for (let x = 0; x < b.w; x++) {
       const block = document.createElement("div");
       block.className = "pblock";
-      block.style.width = "22px";
-      block.style.height = "22px";
+      block.style.width = GHOST_CELL + "px";
+      block.style.height = GHOST_CELL + "px";
       block.style.borderRadius = "7px";
       if (set.has(`${x},${y}`)) {
         block.style.background = p.color;

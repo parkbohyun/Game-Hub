@@ -144,7 +144,7 @@ async function loadLeaderboard() {
         snapshot.forEach(doc => {
             const data = doc.data();
             const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
-            html += `<div class="lb-item"><span>${medal} ${escapeHtml(data.userId || 'Member')}</span><span>${data.score}점</span></div>`;
+            html += `<div class="lb-item"><span>${medal} ${escapeHtml(data.userId || 'Member')}</span><span>${Number(data.score) || 0}점</span></div>`;
             rank++;
         });
         lbEl.innerHTML = html;
@@ -163,6 +163,9 @@ function escapeHtml(str) {
 function initBoard() {
     clearInterval(timer);
     gameEnded = false;
+    isSelecting = false;
+    startPos = null;
+    hideOverlay();
     boardEl.innerHTML = '';
     boardEl.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
     grid = [];
@@ -222,14 +225,14 @@ function handleStart(e) {
 }
 
 function handleMove(e) {
-    if (!isSelecting) return;
+    if (!isSelecting || gameEnded) return;
     const pos = getCellIndex(e);
     if (pos) updateSelection(pos);
     e.preventDefault();
 }
 
 function handleEnd() {
-    if (!isSelecting) return;
+    if (!isSelecting || gameEnded) return;
     isSelecting = false;
     checkSelection();
 }
@@ -289,6 +292,7 @@ function checkSelection() {
 function endGame() {
     if (gameEnded) return;
     gameEnded = true;
+    isSelecting = false;
     clearInterval(timer);
     document.getElementById('modal-title').textContent = "게임 종료!";
     document.getElementById('modal-desc').textContent = `최종 점수: ${score}점`;

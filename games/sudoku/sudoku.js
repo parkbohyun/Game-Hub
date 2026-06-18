@@ -112,12 +112,32 @@ function startGame() {
   mistakeCount = 0;
   selectedCell = null;
   document.getElementById('mistake-display').innerText = "실수: 0";
+
+  // 메모 모드는 새 게임마다 초기화한다.
+  memoMode = false;
+  const memoBtn = document.getElementById('memo-toggle');
+  if (memoBtn) { memoBtn.innerText = "메모 OFF"; memoBtn.classList.remove('memo-active'); }
+
   cellData = Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => ({ memos: new Set() })));
 
+  // 고유 해가 유지되는 범위에서만 칸을 비운다(여러 해가 생겨 정답이 오답 처리되는 문제 방지).
+  const positions = Array.from({ length: 81 }, (_, i) => i).sort(() => Math.random() - 0.5);
   let removed = 0;
-  while (removed < diff) {
-    let r = Math.floor(Math.random() * 9), c = Math.floor(Math.random() * 9);
-    if (board[r][c] !== "") { board[r][c] = ""; removed++; }
+  for (const pos of positions) {
+    if (removed >= diff) break;
+    const r = Math.floor(pos / 9), c = pos % 9;
+    if (board[r][c] === "") continue;
+
+    const backup = board[r][c];
+    board[r][c] = "";
+
+    // 숫자 보드 복사본(빈칸=0)으로 해가 정확히 1개인지 검사
+    const test = board.map(row => row.map(v => (v === "" ? 0 : v)));
+    if (countSolutions(test, 2) === 1) {
+      removed++;             // 유일하면 제거 확정
+    } else {
+      board[r][c] = backup;  // 아니면 되돌림
+    }
   }
 
   for (let r = 0; r < 9; r++) {
@@ -430,6 +450,34 @@ function isValid(board, r, c, n) {
   let sr = Math.floor(r / 3) * 3, sc = Math.floor(c / 3) * 3;
   for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) if (board[sr + i][sc + j] === n) return false;
   return true;
+}
+
+// 백트래킹으로 해의 개수를 최대 limit개까지 센다(퍼즐 유일성 판정용, 빈칸=0).
+// 후보가 가장 적은 칸부터 분기하는 MRV 휴리스틱으로 희소 보드에서도 빠르게 동작한다.
+function countSolutions(board, limit) {
+  let bestR = -1, bestC = -1, bestCands = null;
+  for (let r = 0; r < 9 && !(bestCands && bestCands.length === 1); r++) {
+    for (let c = 0; c < 9; c++) {
+      if (board[r][c]) continue;
+      const cands = [];
+      for (let n = 1; n <= 9; n++) if (isValid(board, r, c, n)) cands.push(n);
+      if (cands.length === 0) return 0; // 막다른 길 → 해 없음
+      if (bestCands === null || cands.length < bestCands.length) {
+        bestR = r; bestC = c; bestCands = cands;
+        if (cands.length === 1) break;
+      }
+    }
+  }
+  if (bestR === -1) return 1; // 빈칸이 없으면 완성된 해 1개
+
+  let count = 0;
+  for (const n of bestCands) {
+    board[bestR][bestC] = n;
+    count += countSolutions(board, limit - count);
+    board[bestR][bestC] = 0;
+    if (count >= limit) break;
+  }
+  return count;
 }
 
 function checkWin() {

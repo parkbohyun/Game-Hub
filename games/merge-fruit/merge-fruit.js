@@ -76,7 +76,15 @@ function resizeCanvas() {
     cv.height = H;
 }
 resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
+window.addEventListener('resize', () => {
+    const oldW = W, oldH = H;
+    resizeCanvas();
+    // 진행 중인 과일을 새 캔버스 크기에 맞게 비례 이동(벽 밖에 끼이거나 폭발하는 현상 방지)
+    if (balls.length && oldW > 0 && oldH > 0) {
+        const sx = W / oldW, sy = H / oldH;
+        for (const b of balls) { b.x *= sx; b.y *= sy; }
+    }
+});
 
 /*************************************************
  * 2) Game data (수박게임 과일 단계)
@@ -191,9 +199,9 @@ function tryDrop() {
         b.y -= 6;
     }
 
-    // 그래도 겹치면 게임오버 처리(공간이 없다고 판단)
+    // 그래도 겹치면 이 위치에는 드롭하지 않는다(다른 곳에 떨어뜨리도록 유도).
+    // 실제 게임오버 판정은 checkLose(쌓인 과일이 라인을 넘는지)가 담당한다.
     if (overlapsAny(b) || b.y - b.r < 0) {
-        endGame(false);
         return;
     }
 
@@ -390,6 +398,8 @@ function resetGame() {
     paused = false;
     gameEnded = false;
     hideOverlay();
+    const btnPause = document.getElementById('btnPause');
+    if (btnPause) btnPause.textContent = "PAUSE";
 }
 
 document.getElementById('btnPause').addEventListener('click', () => {
@@ -401,7 +411,6 @@ document.getElementById('btnPause').addEventListener('click', () => {
 
 document.getElementById('btnRestart').addEventListener('click', () => resetGame());
 document.getElementById('btnAgain').addEventListener('click', () => resetGame());
-// document.getElementById('btnHome').addEventListener('click', () => location.href = "index.html?tab=suika");
 
 /*************************************************
  * 7) Firestore save / leaderboard
@@ -527,7 +536,7 @@ async function saveScore(finalScore) {
     const displayId = await ensureDisplayName();
 
     try {
-        const ref = db.collection("suika_scores").doc(user.uid);
+        const ref = db.collection("merge-fruit_scores").doc(user.uid);
         const prev = await ref.get();
         const prevScore = prev.exists ? Number(prev.data().score ?? -1) : -1;
 
@@ -556,7 +565,7 @@ async function saveScore(finalScore) {
                 `,
                 buttons: [
                     { text: '🔄 다시하기', onClick: () => { closePopup(); resetGame(); } },
-                    { text: '🏠 홈으로', class: 'secondary', onClick: () => { location.href = "../../index.html?tab=suika"; } }
+                    { text: '🏠 홈으로', class: 'secondary', onClick: () => { location.href = "../../index.html?tab=merge-fruit"; } }
                 ]
             });
         } else {
@@ -575,7 +584,7 @@ async function saveScore(finalScore) {
                 `,
                 buttons: [
                     { text: '🔄 다시하기', onClick: () => { closePopup(); resetGame(); } },
-                    { text: '🏠 홈으로', class: 'secondary', onClick: () => { location.href = "../../index.html?tab=suika"; } }
+                    { text: '🏠 홈으로', class: 'secondary', onClick: () => { location.href = "../../index.html?tab=merge-fruit"; } }
                 ]
             });
         }
@@ -600,7 +609,7 @@ document.getElementById('btnSave').addEventListener('click', async () => {
 
 function loadLeaderboard() {
     const scoreListEl = document.getElementById('scoreList');
-    db.collection('suika_scores')
+    db.collection('merge-fruit_scores')
         .orderBy('score', 'desc')
         .limit(10)
         .onSnapshot(snapshot => {
