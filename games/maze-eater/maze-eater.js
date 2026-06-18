@@ -62,6 +62,7 @@ let score = 0;
 let gameActive = true;
 let animationId = null;
 let lastFrameTime = 0;
+let leaderboardUnsub = null;
 
 const scoreEl = document.getElementById('currentScore');
 
@@ -494,7 +495,7 @@ async function saveScore(finalScore) {
   const displayId = await ensureDisplayName();
 
   try {
-    const ref = db.collection("pacman_scores").doc(user.uid);
+    const ref = db.collection("maze-eater_scores").doc(user.uid);
     const prev = await ref.get();
     const prevScore = prev.exists ? Number(prev.data().score ?? -1) : -1;
 
@@ -534,14 +535,17 @@ function restartGame() {
 }
 
 function goHome() {
-  location.href = "../../index.html?tab=pacman";
+  location.href = "../../index.html?tab=maze-eater";
 }
 
 function loadLeaderboard() {
   const scoreListEl = document.getElementById('scoreList');
   if (!scoreListEl) return;
 
-  db.collection('pacman_scores')
+  // 재시작 때마다 리스너가 중복 등록되지 않도록 기존 구독을 해제한다.
+  if (leaderboardUnsub) { leaderboardUnsub(); leaderboardUnsub = null; }
+
+  leaderboardUnsub = db.collection('maze-eater_scores')
     .orderBy('score', 'desc')
     .limit(10)
     .onSnapshot(snapshot => {

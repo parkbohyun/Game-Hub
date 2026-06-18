@@ -78,6 +78,7 @@ let lastTs = 0;
 let speed = INITIAL_SPEED;
 let groundX = 0;
 let frameCount = 0;
+let rafId = null;
 
 // 공룡 객체
 const dino = {
@@ -339,9 +340,11 @@ function setState(s) {
 // 입력 처리
 // =========================
 function startIfReady() {
+    if (gameState === STATE.PLAYING) return;
     if (gameState === STATE.READY || gameState === STATE.OVER) {
         resetGame(false);
-        requestAnimationFrame(loop);
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(loop);
     }
 }
 
@@ -370,6 +373,7 @@ function setDuck(isDuck) {
 }
 
 document.addEventListener("keydown", (e) => {
+    if (e.repeat) return;
     if (e.code === "Space" || e.code === "ArrowUp") {
         e.preventDefault();
         if (gameState !== STATE.PLAYING) startIfReady();
@@ -532,7 +536,8 @@ function update(dt) {
     // 충돌 감지
     const dinoBox = {
         x: dino.x,
-        y: dino.y,
+        // 숙일 때는 충돌 박스 y를 실제로 그려지는 위치(groundY - DINO_DUCK_HEIGHT)에 맞춘다.
+        y: dino.ducking ? (groundY - DINO_DUCK_HEIGHT) : dino.y,
         width: dino.ducking ? 58 : DINO_WIDTH,
         height: dino.ducking ? DINO_DUCK_HEIGHT : DINO_HEIGHT
     };
@@ -606,7 +611,7 @@ function render() {
 // 게임 루프
 // =========================
 function loop(ts) {
-    if (gameState !== STATE.PLAYING) return;
+    if (gameState !== STATE.PLAYING) { rafId = null; return; }
 
     if (!lastTs) lastTs = ts;
     const dt = Math.min(0.05, (ts - lastTs) / 1000);
@@ -615,7 +620,7 @@ function loop(ts) {
     update(dt);
     render();
 
-    requestAnimationFrame(loop);
+    rafId = requestAnimationFrame(loop);
 }
 
 async function onGameOver(finalScore) {

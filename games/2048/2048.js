@@ -47,6 +47,7 @@ function generate() {
   } else {
     const emptySquares = squares.filter(s => s.innerHTML === '');
     if (emptySquares.length > 0) generate();
+    else checkForGameOver();
   }
 }
 
